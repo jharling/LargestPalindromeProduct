@@ -11,18 +11,44 @@ public class Main {
 	 */
         int answer = 0;
 
+        boolean flag = false;
+        int count = 0;
+        int product;
         for (int i = 100; i < 1000; i++) {
             for (int j = 100; j < 1000; j++) {
-                int product = i * j;
-                if (checkPalindrome(product) && answer < product){
+                product = i * j;
+                if (stringCheckPalindrome(product) && answer < product){
                     answer = product;
-                }
+                } else count++;
             }
         }
-        System.out.println(answer);
+        System.out.println("count: " + count);
+        System.out.println("answer: " + answer);
+
+        /*
+            More efficient way. Since we're looking for the largest product, starting from the
+            top of our limit will allow us to hit the largest pair of products, which will always
+            give us the largest possible number. Then we can set a flag and break since all numbers
+            following will always be smaller than the first palindrome found.
+         */
+        count = 0;
+        for (int i = 999; i > 900; i--) {
+            for (int j = 999; j > 900; j--) {
+                product = i * j;
+                if (mathCheckPalindrome(product)){
+                    answer = product;
+                    flag = true;
+                } else count++;
+            }
+            if (flag) {
+                break;
+            }
+        }
+        System.out.println("count: " + count);
+        System.out.println("answer: " + answer);
     }
 
-    private static Boolean checkPalindrome(int product) {
+    private static Boolean stringCheckPalindrome(int product) {
         String s1 = String.valueOf(product);
         StringBuilder sb = new StringBuilder();
         for (int i = s1.length() - 1; i >= 0; i--) {
@@ -31,5 +57,16 @@ public class Main {
         return s1.equalsIgnoreCase(String.valueOf(sb));
     }
 
+    private static Boolean mathCheckPalindrome(int product) {
+        int n;
+        int total = 0;
+        int temp = product;
 
+        while(product > 0){
+            n = product % 10;
+            total =(total * 10) + n;
+            product = product / 10;
+        }
+        return temp == total;
+    }
 }
